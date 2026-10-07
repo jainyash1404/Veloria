@@ -12,16 +12,30 @@ export function createApp() {
   const allowedOrigins = [
     "http://localhost:5173",
     "http://localhost:5174",
+    "https://veloria-steel.vercel.app",
     "https://veloria-ecommerce-five.vercel.app",
-    "veloria-ecommerce-4rjl26v4f-jainyash1404-gmailcoms-projects.vercel.app"
-  ];
 
+  ];
   app.use(cors({
-    origin: allowedOrigins,
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  }));
+  origin: (origin, callback) => {
+    // Postman / server-to-server requests
+    if (!origin) {
+      return callback(null, true);
+    }
+    // Allowed exact URLs
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    // Allow Vercel preview deployments
+    if (origin.endsWith(".vercel.app")) {
+      return callback(null, true);
+    }
+    return callback(new Error(`CORS blocked: ${origin}`));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
 
   // Cross-origin resource policy relaxed since product images are served from
   // Cloudinary (a different origin) and the frontend is on a different domain too.
