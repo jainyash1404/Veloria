@@ -275,7 +275,7 @@ The security model was iteratively improved by identifying and fixing common web
 
 Full-Stack Developer • Backend Engineer • AI Enthusiast
 
-- 💼 GitHub: *https://github.com/Yash-20051404*
+- 💼 GitHub: *https://github.com/jainyash1404*
 - 🔗 LinkedIn: *[add link]*
 - ✉️ Email: *jainyash1404@mail.com*
 
