@@ -31,7 +31,7 @@
 
 <br>
 
-[![Live Website](https://img.shields.io/badge/🌐-Live_Website-black?style=for-the-badge&logo=vercel)](https://veloria-ecommerce-five.vercel.app/)
+[![Live Website](https://img.shields.io/badge/🌐-Live_Website-black?style=for-the-badge&logo=vercel)](https://veloria-steel.vercel.app/)
 
 <br>
 
