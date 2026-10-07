@@ -1,6 +1,11 @@
-import { pipeline } from '@xenova/transformers';
 import { IProduct } from '../models/Product';
+const loadPipeline = async () => {
+  const module = await new Function(
+    'return import("@xenova/transformers")'
+  )();
 
+  return module.pipeline;
+};
 // ─────────────────────────────────────────────
 // EMBEDDING SERVICE
 // Singleton: loads Xenova/all-MiniLM-L6-v2 once
@@ -18,6 +23,7 @@ class EmbeddingService {
     if (this.initialized || this.initializing) return;
     this.initializing = true;
     try {
+      const pipeline = await loadPipeline();
       // all-MiniLM-L6-v2: 384-dim embeddings, fast CPU inference
       this.model = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
       this.initialized = true;

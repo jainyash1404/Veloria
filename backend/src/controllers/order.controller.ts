@@ -2,7 +2,6 @@ import { orderService } from '../services/order.service';
 import { emailService } from '../services/email.service';
 import { Coupon } from '../models/Coupon';
 import { Role } from '../types';
-import puppeteer from 'puppeteer';
 
 // Checkout Page: Create Order.
 //
@@ -542,6 +541,14 @@ export const downloadInvoice = async (req: any, res: any) => {
     </html>
     `;
 
+    const loadPuppeteer = async () => {
+  const module = await new Function(
+    'return import("puppeteer")'
+  )();
+
+  return module.default;
+};
+    const puppeteer = await loadPuppeteer();
     const browser = await puppeteer.launch({
       headless: true
     });

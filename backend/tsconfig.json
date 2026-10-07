@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
-    
     "noImplicitAny": false,
+
     "target": "ES2022",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "Node16",
+    "moduleResolution": "Node16",
 
     "rootDir": "./src",
     "outDir": "./dist",
@@ -14,13 +14,12 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
 
-    "baseUrl": ".",
-    "ignoreDeprecations": "6.0",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     },
 
     "types": ["node"]
