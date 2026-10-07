@@ -24,9 +24,9 @@ async function bootstrap() {
     logger.warn(`Hybrid search engine initialization failed: ${error.message}. Search will use fallback.`)
   })
 
-  server.listen(env.port, () => {
-    logger.info(`NovaKicks API running on port ${env.port}`)
-  })
+  server.listen(env.port, '0.0.0.0', () => {
+  logger.info(`NovaKicks API running on port ${env.port}`)
+})
 }
 
 bootstrap().catch((error: Error) => {
