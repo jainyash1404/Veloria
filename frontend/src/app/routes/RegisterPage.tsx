@@ -117,12 +117,10 @@ export function RegisterPage() {
     // PHONE VALIDATION
     const phoneRegex = /^[6-9]\d{9}$/
 
-    if (!phoneRegex.test(formData.phone)) {
-      setFormError(
-        'Please enter a valid 10-digit mobile number.'
-      )
-      return
-    }
+if (!phoneRegex.test(formData.phone)) {
+  setFormError('Please enter a valid 10-digit mobile number.')
+  return
+}
 
     // PASSWORD LENGTH
     if (formData.password.length < 8) {
@@ -248,41 +246,20 @@ export function RegisterPage() {
         {/* PHONE */}
         <div>
           <LuxuryInput
-            label="Phone Number"
-            type="tel"
-            required
-            value={formData.phone}
-            maxLength={10}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              // Only numbers
-              const value = e.target.value
-                .replace(/\D/g, '')
-                .slice(0, 10)
-
-              setFormData({
-                ...formData,
-                phone: value,
-              })
-
-              clearError()
-
-              // Live validation
-              if (value.length > 0 && value.length < 10) {
-                setFormError(
-                  'Mobile number must be exactly 10 digits.'
-                )
-              } else if (
-                value.length === 10 &&
-                !/^[6-9]/.test(value)
-              ) {
-                setFormError(
-                  'Mobile number must start with 6, 7, 8 or 9.'
-                )
-              } else {
-                setFormError('')
-              }
-            }}
-          />
+  label="Phone Number"
+  type="tel"
+  required
+  maxLength={10}
+  pattern="[6-9][0-9]{9}"
+  title="Please enter a valid 10-digit mobile number"
+  value={formData.phone}
+  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+    setFormData({
+      ...formData,
+      phone: e.target.value.replace(/\D/g, '').slice(0, 10),
+    })
+  }
+/>
 
           {/* PHONE ERROR */}
           {formData.phone.length > 0 &&
