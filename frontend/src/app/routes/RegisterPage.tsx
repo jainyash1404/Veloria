@@ -47,25 +47,33 @@ export function RegisterPage() {
   const [showOtp, setShowOtp] = useState(false)
   const [formError, setFormError] = useState('')
 
-  const handleSubmit = async (e: React.FormEvent) => {
+const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault()
 
   setFormError('')
   clearError()
 
-  // Password length
+  // Phone number: exactly 10 digits and starts with 6-9
+  const phoneRegex = /^[6-9]\d{9}$/
+
+  if (!phoneRegex.test(formData.phone)) {
+    setFormError('Please enter a valid 10-digit mobile number.')
+    return
+  }
+
+  // Password: minimum 8 characters
   if (formData.password.length < 8) {
     setFormError('Password must be at least 8 characters long.')
     return
   }
 
-  // Uppercase
+  // Password: uppercase
   if (!/[A-Z]/.test(formData.password)) {
     setFormError('Password must contain at least 1 uppercase letter.')
     return
   }
 
-  // Number
+  // Password: number
   if (!/[0-9]/.test(formData.password)) {
     setFormError('Password must contain at least 1 number.')
     return
@@ -79,7 +87,9 @@ export function RegisterPage() {
 
   // Terms
   if (!formData.agree) {
-    setFormError('Please agree to the Terms of Service and Privacy Policy.')
+    setFormError(
+      'Please agree to the Terms of Service and Privacy Policy.'
+    )
     return
   }
 
@@ -87,7 +97,7 @@ export function RegisterPage() {
     await register(formData)
     setShowOtp(true)
   } catch (err) {
-    // Backend error is already handled by authStore
+    // Error is handled by authStore
   }
 }
 
@@ -128,9 +138,20 @@ export function RegisterPage() {
           value={formData.email} onChange={(e: any) => setFormData({...formData, email: e.target.value})}
         />
         <LuxuryInput 
-          label="Phone Number" type="tel" required 
-          value={formData.phone} onChange={(e: any) => setFormData({...formData, phone: e.target.value})}
-        />
+  label="Phone Number"
+  type="tel"
+  required
+  value={formData.phone}
+  maxLength={10}
+  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '').slice(0, 10)
+
+    setFormData({
+      ...formData,
+      phone: value,
+    })
+  }}
+/>
         
         <div className="relative">
           <LuxuryInput 
