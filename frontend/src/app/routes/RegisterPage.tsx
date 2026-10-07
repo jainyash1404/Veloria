@@ -45,15 +45,51 @@ export function RegisterPage() {
   const { register, loading, error, clearError } = useAuthStore()
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', password: '', confirm: '', role: USER_ROLES.BUYER, agree: false })
   const [showOtp, setShowOtp] = useState(false)
+  const [formError, setFormError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (formData.password !== formData.confirm) return // Add UI error handling for this
-    try {
-      await register(formData)
-      setShowOtp(true)
-    } catch (err) {}
+  e.preventDefault()
+
+  setFormError('')
+  clearError()
+
+  // Password length
+  if (formData.password.length < 8) {
+    setFormError('Password must be at least 8 characters long.')
+    return
   }
+
+  // Uppercase
+  if (!/[A-Z]/.test(formData.password)) {
+    setFormError('Password must contain at least 1 uppercase letter.')
+    return
+  }
+
+  // Number
+  if (!/[0-9]/.test(formData.password)) {
+    setFormError('Password must contain at least 1 number.')
+    return
+  }
+
+  // Confirm password
+  if (formData.password !== formData.confirm) {
+    setFormError('Passwords do not match.')
+    return
+  }
+
+  // Terms
+  if (!formData.agree) {
+    setFormError('Please agree to the Terms of Service and Privacy Policy.')
+    return
+  }
+
+  try {
+    await register(formData)
+    setShowOtp(true)
+  } catch (err) {
+    // Backend error is already handled by authStore
+  }
+}
 
   const handleVerificationSuccess = () => {
     if (false) {
@@ -75,7 +111,14 @@ export function RegisterPage() {
     <AuthLayout title="Join Veloria" subtitle="Begin your luxury journey.">
       {/* <RoleSelector role={formData.role} setRole={(r: any) => setFormData({...formData, role: r})} /> */}
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-6" onChange={clearError}>
+     <form
+  onSubmit={handleSubmit}
+  className="flex flex-col gap-6"
+  onChange={() => {
+    clearError()
+    setFormError('')
+  }}
+>
         <LuxuryInput 
           label="Full Name" required 
           value={formData.name} onChange={(e: any) => setFormData({...formData, name: e.target.value})}
@@ -95,6 +138,40 @@ export function RegisterPage() {
             value={formData.password} onChange={(e: any) => setFormData({...formData, password: e.target.value})}
           />
           <PasswordStrength password={formData.password} />
+
+{formData.password && (
+  <div className="mt-3 space-y-1.5" style={inter}>
+    <p
+      className={`text-[9px] transition-colors ${
+        formData.password.length >= 8
+          ? 'text-[#D6B57A]'
+          : 'text-white/40'
+      }`}
+    >
+      {formData.password.length >= 8 ? '✓' : '○'} At least 8 characters
+    </p>
+
+    <p
+      className={`text-[9px] transition-colors ${
+        /[A-Z]/.test(formData.password)
+          ? 'text-[#D6B57A]'
+          : 'text-white/40'
+      }`}
+    >
+      {/[A-Z]/.test(formData.password) ? '✓' : '○'} 1 uppercase letter
+    </p>
+
+    <p
+      className={`text-[9px] transition-colors ${
+        /[0-9]/.test(formData.password)
+          ? 'text-[#D6B57A]'
+          : 'text-white/40'
+      }`}
+    >
+      {/[0-9]/.test(formData.password) ? '✓' : '○'} 1 number
+    </p>
+  </div>
+)}
         </div>
 
         <LuxuryInput 
@@ -112,7 +189,14 @@ export function RegisterPage() {
           </span>
         </label>
 
-        {error && <p className="text-red-400 text-xs text-center mt-2" style={inter}>{error}</p>}
+        {(formError || error) && (
+  <p
+    className="text-red-400 text-xs text-center mt-2"
+    style={inter}
+  >
+    {formError || error}
+  </p>
+)}
 
         <button
   type="submit"
